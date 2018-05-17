@@ -142,7 +142,7 @@ public class SelectionOperatorServiceTest {
     rows.add(_compatibleRow1.clone());
     SelectionResults selectionResults =
         SelectionOperatorUtils.renderSelectionResultsWithoutOrdering(rows, _upgradedDataSchema,
-            Arrays.asList(_columnNames));
+            Arrays.asList(_columnNames), false);
     List<Serializable[]> formattedRows = selectionResults.getRows();
     Serializable[] expectedFormattedRow1 =
         {"0", "1.0", "2.0", "3.0", "4", new String[]{"5"}, new String[]{"6.0"}, new String[]{"7.0"}, new String[]{"8.0"}, new String[]{"9"}};
@@ -160,7 +160,7 @@ public class SelectionOperatorServiceTest {
     rows.offer(_row1.clone());
     rows.offer(_compatibleRow1.clone());
     rows.offer(_compatibleRow2.clone());
-    SelectionResults selectionResults = selectionOperatorService.renderSelectionResultsWithOrdering();
+    SelectionResults selectionResults = selectionOperatorService.renderSelectionResultsWithOrdering(false);
     List<Serializable[]> formattedRows = selectionResults.getRows();
     Serializable[] expectedFormattedRow1 =
         {"1", "2.0", "3.0", "4.0", "5", new String[]{"6"}, new String[]{"7.0"}, new String[]{"8.0"}, new String[]{"9.0"}, new String[]{"10"}};

@@ -314,12 +314,12 @@ public class SelectionOperatorService {
    * @return {@link SelectionResults} object results.
    */
   @Nonnull
-  public SelectionResults renderSelectionResultsWithOrdering() {
+  public SelectionResults renderSelectionResultsWithOrdering(boolean preserveType) {
     LinkedList<Serializable[]> rowsInSelectionResults = new LinkedList<>();
 
     int[] columnIndices = getColumnIndices();
     while (_rows.size() > _selectionOffset) {
-      rowsInSelectionResults.addFirst(getFormattedRowWithOrdering(_rows.poll(), columnIndices));
+      rowsInSelectionResults.addFirst(getFormattedRowWithOrdering(_rows.poll(), columnIndices, preserveType));
     }
 
     return new SelectionResults(_selectionColumns, rowsInSelectionResults);
@@ -357,7 +357,7 @@ public class SelectionOperatorService {
    * @return formatted selection row.
    */
   @Nonnull
-  private Serializable[] getFormattedRowWithOrdering(@Nonnull Serializable[] row, @Nonnull int[] columnIndices) {
+  private Serializable[] getFormattedRowWithOrdering(@Nonnull Serializable[] row, @Nonnull int[] columnIndices, boolean preserveType) {
     int numColumns = columnIndices.length;
     Serializable[] formattedRow = new Serializable[numColumns];
     for (int i = 0; i < numColumns; i++) {

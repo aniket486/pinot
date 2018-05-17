@@ -106,7 +106,7 @@ public class AggregationGroupByTrimmingServiceTest {
       finalDistinctCountResultMap.put(entry.getKey(), ((IntOpenHashSet) entry.getValue()).size());
     }
     List[] groupByResultLists =
-        _trimmingService.trimFinalResults(new Map[]{trimmedSumResultMap, finalDistinctCountResultMap});
+        _trimmingService.trimFinalResults(new Map[]{trimmedSumResultMap, finalDistinctCountResultMap}, false);
     List<GroupByResult> sumGroupByResultList = groupByResultLists[0];
     List<GroupByResult> distinctCountGroupByResultList = groupByResultLists[1];
     for (int i = 0; i < GROUP_BY_TOP_N; i++) {

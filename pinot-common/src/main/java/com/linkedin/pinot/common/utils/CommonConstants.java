@@ -219,6 +219,7 @@ public class CommonConstants {
       public static final String TRACE = "trace";
       public static final String DEBUG_OPTIONS = "debugOptions";
       public static final String QUERY_OPTIONS = "queryOptions";
+      public static final String PRESERVE_TYPE = "preserveType";
     }
   }
 

@@ -418,7 +418,7 @@ public class SelectionOperatorUtils {
    */
   @Nonnull
   public static SelectionResults renderSelectionResultsWithoutOrdering(@Nonnull List<Serializable[]> rows,
-      @Nonnull DataSchema dataSchema, @Nonnull List<String> selectionColumns) {
+      @Nonnull DataSchema dataSchema, @Nonnull List<String> selectionColumns, boolean preserveType) {
     // TODO: remove the code for backward compatible after server updated to the latest code.
     int numSelectionColumns = selectionColumns.size();
     int[] columnIndices = new int[numSelectionColumns];
@@ -431,7 +431,7 @@ public class SelectionOperatorUtils {
     }
     int numRows = rows.size();
     for (int i = 0; i < numRows; i++) {
-      rows.set(i, getFormattedRowWithoutOrdering(rows.get(i), dataSchema, columnIndices));
+      rows.set(i, getFormattedRowWithoutOrdering(rows.get(i), dataSchema, columnIndices, preserveType));
     }
 
     /* TODO: uncomment after server updated to the latest code.
@@ -458,13 +458,17 @@ public class SelectionOperatorUtils {
 
   // TODO: remove this method after server updated to the latest code.
   private static Serializable[] getFormattedRowWithoutOrdering(@Nonnull Serializable[] row,
-      @Nonnull DataSchema dataSchema, @Nonnull int[] columnIndices) {
+      @Nonnull DataSchema dataSchema, @Nonnull int[] columnIndices, boolean preserveType) {
     int numColumns = columnIndices.length;
     Serializable[] formattedRow = new Serializable[numColumns];
     for (int i = 0; i < numColumns; i++) {
       int columnIndex = columnIndices[i];
-      formattedRow[i] =
-          SelectionOperatorUtils.getFormattedValue(row[columnIndex], dataSchema.getColumnDataType(columnIndex));
+      if (preserveType) {
+        formattedRow[i] = row[columnIndex];
+      } else {
+        formattedRow[i] =
+            SelectionOperatorUtils.getFormattedValue(row[columnIndex], dataSchema.getColumnDataType(columnIndex));
+      }
     }
     return formattedRow;
   }

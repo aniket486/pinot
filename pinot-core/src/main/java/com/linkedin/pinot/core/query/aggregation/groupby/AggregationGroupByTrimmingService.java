@@ -117,7 +117,7 @@ public class AggregationGroupByTrimmingService {
    */
   @SuppressWarnings("unchecked")
   @Nonnull
-  public List<GroupByResult>[] trimFinalResults(@Nonnull Map<String, Comparable>[] finalResultMaps) {
+  public List<GroupByResult>[] trimFinalResults(@Nonnull Map<String, Comparable>[] finalResultMaps, boolean preserveType) {
     int numAggregationFunctions = _aggregationFunctions.length;
     List<GroupByResult>[] trimmedResults = new List[numAggregationFunctions];
 
@@ -139,7 +139,7 @@ public class AggregationGroupByTrimmingService {
       }
 
       // Dump trimmed results into list
-      sorter.dumpToGroupByResults(groupByResults);
+      sorter.dumpToGroupByResults(groupByResults, preserveType);
     }
 
     return trimmedResults;
@@ -150,7 +150,7 @@ public class AggregationGroupByTrimmingService {
 
     void dumpToMap(Map<String, Object> dest);
 
-    void dumpToGroupByResults(LinkedList<GroupByResult> dest);
+      void dumpToGroupByResults(LinkedList<GroupByResult> dest, boolean preserveType);
   }
 
   @SuppressWarnings("unchecked")
@@ -222,7 +222,7 @@ public class AggregationGroupByTrimmingService {
     }
 
     @Override
-    public void dumpToGroupByResults(LinkedList<GroupByResult> dest) {
+    public void dumpToGroupByResults(LinkedList<GroupByResult> dest, boolean preserveType) {
       GroupKeyResultPair groupKeyResultPair;
       while ((groupKeyResultPair = _heap.poll()) != null) {
         // Set limit to -1 to prevent removing trailing empty strings
@@ -230,7 +230,12 @@ public class AggregationGroupByTrimmingService {
 
         GroupByResult groupByResult = new GroupByResult();
         groupByResult.setGroup(Arrays.asList(groupKeys));
-        groupByResult.setValue(AggregationFunctionUtils.formatValue(groupKeyResultPair._result));
+
+        if (preserveType) {
+          groupByResult.setValue(AggregationFunctionUtils.getSerializableValue(groupKeyResultPair._result));
+        } else {
+          groupByResult.setValue(AggregationFunctionUtils.formatValue(groupKeyResultPair._result));
+        }
 
         // Add to head to reverse the order
         dest.addFirst(groupByResult);
@@ -342,7 +347,7 @@ public class AggregationGroupByTrimmingService {
     }
 
     @Override
-    public void dumpToGroupByResults(LinkedList<GroupByResult> dest) {
+    public void dumpToGroupByResults(LinkedList<GroupByResult> dest, boolean preserveType) {
       throw new UnsupportedOperationException();
     }
   }
